@@ -1,16 +1,23 @@
-from aiogram import types
 import asyncpg
-conn = asyncpg.connect(user='postgres', password='postgres', database='online_course', host='localhost')
+from aiogram import Bot
 
 async def get_categories():
-    courses = await conn.fetch('SELECT * FROM apps_category')
+    conn = await asyncpg.connect("postgresql://postgres:postgres@localhost/online_course")
+    rows = await conn.fetch("SELECT * FROM apps_category")
     await conn.close()
-    return courses
+    return rows
 
-
-async def get_courses(c_id):
-    courses = await conn.fetch('SELECT * FROM apps_course WHERE category_id = $1', c_id)
+async def get_courses_by_category_id(category_id):
+    conn = await asyncpg.connect("postgresql://postgres:postgres@localhost/online_course")
+    if category_id:
+        rows = await conn.fetch("SELECT id, title FROM apps_course WHERE category_id=$1", category_id)
+    else:
+        rows = await conn.fetch("SELECT id, title FROM apps_category")
     await conn.close()
-    return courses
+    return [{"id": r["id"], "title": r["title"]} for r in rows]
 
-
+async def get_lessons_by_course_id(course_id):
+    conn = await asyncpg.connect("postgresql://postgres:postgres@localhost/online_course")
+    rows = await conn.fetch("SELECT id, title FROM apps_lesson WHERE course_id=$1", course_id)
+    await conn.close()
+    return [{"id": r["id"], "title": r["title"]} for r in rows]
