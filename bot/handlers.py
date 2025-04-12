@@ -7,8 +7,7 @@ router = Router()
 
 @router.message(F.text == "/start")
 async def on_start(message: Message):
-    categories = await get_categories()
-    markup = category_keyboard(categories)
+    markup = await category_keyboard()
     await message.answer("Salom! Qaysi kategoriya qiziqtiradi?", reply_markup=markup)
 
 
