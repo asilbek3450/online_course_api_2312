@@ -1,6 +1,6 @@
 from aiogram.types import KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
-from database import get_categories, get_courses_by_category_id, get_lessons_by_course_id
+from database import get_categories, get_lessons_by_course_name, get_courses_by_category_name
 
 async def category_keyboard():
     categories = await get_categories()
